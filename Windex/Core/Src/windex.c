@@ -1,13 +1,14 @@
 #include <string.h>
 #include <stdbool.h>
-
+#include <stdlib.h>  // For atof function
+#include <stdint.h>
 #include "windex.h"
 
 
 void reset() {
 
     // memset(sentence.data, 0, sizeof(sentence.data));
-    sentence.data[0] = 0; /* codice ASCII per '\0' */
+    sentence.data[0] = '\0';
 	sentence.length = 0;
 
     data_wind.angle = 0.0;
@@ -30,19 +31,19 @@ void reset() {
 
 void update(char c) {
 
-	if(comunication_stage == COMUNICATION_STAGE_WAITING && c == 36) {    /* codice ASCII per '$' */
+	if(comunication_stage == COMUNICATION_STAGE_WAITING && c == SENTENCE_CHARACTER_START[0]) {
 		comunication_stage = COMUNICATION_STAGE_INCOMING;
 		addToSentence(c);
 	}
 
 	if(comunication_stage == COMUNICATION_STAGE_INCOMING) {
-		if (c == 42) {     a /* codice ASCII per '*' */
-			addToSentence((char) 44);
+		if (c == '*') {
+			addToSentence(SENTENCE_CHARACTER_DELIMITER[0]);
 		}
 
 		addToSentence(c);
 
-		if (c == 0) {     /* codice ASCII per '\0' */
+		if (c == SENTENCE_CHARACTER_END[0]) {
 			comunication_stage = COMUNICATION_STAGE_DONE;
 
 			switch(getDataType(sentence))
@@ -116,17 +117,13 @@ void fillDataWind(sentence_t sentence) {
     }
 
     if (tokenCount == 7) {
-
-    	/*
-			data_wind.angle = (float) tokens[1];
-			data_wind.reference = (char) tokens[2];
-			data_wind.speed = (float) tokens[3];
+    	    data_wind.angle = atof(tokens[1]);
+			data_wind.reference = tokens[2][0]; // this is done to dereference from pointer
+			data_wind.speed = atof(tokens[3]); // atof function to convert into float
 			data_wind.unit = WIND_UNITS_KNOTS;
-			data_wind.CV7_status = (int) token[5] == "A" ? CV7_STATUS_AVAILABLE : CV7_STATUS_ALARM;
+			data_wind.CV7_status = strcmp(tokens[5], "A") == 0 ? CV7_STATUS_AVAILABLE : CV7_STATUS_ALARM; // string compare instead of equating pointers
 			data_wind.checksum = (char) token[6];
 			data_wind.isValid = true;
-		*/
-
     } else {
     	comunication_status = COMUNICATION_STATUS_ERROR;
     }
