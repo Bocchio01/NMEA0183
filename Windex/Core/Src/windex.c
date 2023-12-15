@@ -7,7 +7,7 @@
 void reset() {
 
     // memset(sentence.data, 0, sizeof(sentence.data));
-    sentence.data[0] = "\0";
+    sentence.data[0] = 0; /* codice ASCII per '\0' */
 	sentence.length = 0;
 
     data_wind.angle = 0.0;
@@ -30,19 +30,19 @@ void reset() {
 
 void update(char c) {
 
-	if(comunication_stage == COMUNICATION_STAGE_WAITING && c == SENTENCE_CHARACTER_START) {
+	if(comunication_stage == COMUNICATION_STAGE_WAITING && c == 36) {    /* codice ASCII per '$' */
 		comunication_stage = COMUNICATION_STAGE_INCOMING;
 		addToSentence(c);
 	}
 
 	if(comunication_stage == COMUNICATION_STAGE_INCOMING) {
-		if (c == "*") {
-			addToSentence((char) SENTENCE_CHARACTER_DELIMITER);
+		if (c == 42) {     a /* codice ASCII per '*' */
+			addToSentence((char) 44);
 		}
 
 		addToSentence(c);
 
-		if (c == SENTENCE_CHARACTER_END) {
+		if (c == 0) {     /* codice ASCII per '\0' */
 			comunication_stage = COMUNICATION_STAGE_DONE;
 
 			switch(getDataType(sentence))
