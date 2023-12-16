@@ -8,25 +8,5 @@ _local_files
 
 
 # STM related files
-Windex/.cproject
-Windex/.mxproject
-Windex/.project
-Windex/.settings
-Windex/Core/Inc/main.h
-Windex/Core/Inc/stm32f4xx_hal_conf.h
-Windex/Core/Inc/stm32f4xx_it.h
-Windex/Core/Src/main.c
-Windex/Core/Src/stm32f4xx_hal_msp.c
-Windex/Core/Src/stm32f4xx_it.c
-Windex/Core/Src/syscalls.c
-Windex/Core/Src/sysmem.c
-Windex/Core/Src/system_stm32f4xx.c
-Windex/Core/Startup/startup_stm32f411retx.s
-Windex/Debug
-Windex/Drivers
-Windex/Release
-Windex/STM32F411RETX_FLASH.ld
-Windex/STM32F411RETX_RAM.ld
-Windex/Windex Debug.launch
-Windex/Windex.ioc
 .metadata
+STM_Windex

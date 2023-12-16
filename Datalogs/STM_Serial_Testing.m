@@ -31,13 +31,13 @@ serial = serialport( ...
 
 %% Data sending
 
-out = [];
+
 try
     while ~feof(file_ID)
         line = fgetl(file_ID);
         for character = num2cell(line)
             write(serial, character{1}, "char");
-            out(end+1) = read(serial, 1, "char");
+            
         end
     end
 catch
@@ -45,5 +45,6 @@ catch
     error("Error reading and sending data.");
 end
 
+out = read(serial, 256, "char");
 fclose(file_ID);
 char(out)
