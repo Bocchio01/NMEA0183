@@ -14,8 +14,6 @@
 #define SENTENCE_CHARACTER_END_CR 0x0D
 #define SENTENCE_CHARACTER_END_LF 0x0A
 #define SENTENCE_CHARACTER_CHECKSUM_START 0x2A
-#define MAX_FIELDS_COUNT 20
-#define MAX_SENSORS 10
 
 typedef enum
 {
@@ -31,21 +29,27 @@ typedef enum
 	COMUNICATION_STATUS_ERROR
 } comunication_status_t;
 
-// typedef struct
-// {
-// 	uint8_t length;
-// 	char buffer[SENTENCE_MAX_LEGTH];
-// } buffer_t;
+typedef struct
+{
+	uint8_t sizeOf;
+	char data[SENTENCE_MAX_LEGTH];
+} buffer_t;
+
+// TODO: resolve circular dependency
+// struct fields_t: Declared in sensors_handler.h;
 
 typedef struct
 {
-	uint8_t length;
-	char buffer[SENTENCE_MAX_LEGTH];
-	sensor_t talkerID;
-	uint8_t numberOfFields;
-	char *fields[MAX_FIELDS_COUNT];
-	uint8_t checksum;
-	bool isChecksumValid;
+	uint8_t value;
+	bool isValid;
+} checksum_t;
+
+typedef struct
+{
+	buffer_t *buffer;
+	sensor_ID_t sensorID;
+	fields_t *fields;
+	checksum_t *checksum;
 } sentence_t;
 
 typedef struct
@@ -54,28 +58,35 @@ typedef struct
 	comunication_status_t status;
 } comunication_t;
 
-struct NMEA0183_t
+typedef struct
+{
+	uint8_t sizeOf;
+	sensor_t *sensor[MAX_SENSORS];
+} registered_sensor_t;
+
+typedef struct
 {
 	sentence_t *sentence;
 	comunication_t *comunication;
-	uint8_t numRegisteredSensors;
-	registered_sensor_t *registeredSensors[MAX_SENSORS];
-};
+	registered_sensor_t *registeredSensor;
+} NMEA0183_t;
 
 NMEA0183_t *NMEA0183_Init();
 sentence_t *NMEA0183_InitSentence();
 comunication_t *NMEA0183_InitComunication();
+registered_sensor_t *NMEA0183_InitRegisteredSensor();
 
 void NMEA0183_Reset(NMEA0183_t *nmea0183);
-void NMEA0183_Reset_Sentence(sentence_t *sentence);
-void NMEA0183_Reset_Comunication(comunication_t *comunication);
+void NMEA0183_ResetSentence(sentence_t *sentence);
+void NMEA0183_ResetComunication(comunication_t *comunication);
+void NMEA0183_ResetRegisteredSensor(registered_sensor_t *registeredSensor);
 
-void NMEA0183_RegisterSensor(NMEA0183_t *nmea0183, registered_sensor_t sensor_value);
+void NMEA0183_RegisterSensor(NMEA0183_t *nmea0183, sensor_t sensor_value);
 
 void NMEA0183_Update(NMEA0183_t *nmea0183, uint8_t c);
 void NMEA0183_AddToBuffer(NMEA0183_t *nmea0183, uint8_t c);
 void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183);
-void NMEA0183_GetTalkerID(NMEA0183_t *nmea0183);
+void NMEA0183_GetSensorID(NMEA0183_t *nmea0183);
 void NMEA0183_GetFields(NMEA0183_t *nmea0183);
 void NMEA0183_GetChecksum(NMEA0183_t *nmea0183);
 uint8_t NMEA0183_ComputeChecksum(char *buffer, uint8_t length);

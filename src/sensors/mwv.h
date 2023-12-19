@@ -36,7 +36,7 @@ typedef struct
     MWV_status_t status;
 } MWV_data_t;
 
-registered_sensor_t MWV_Init();
+sensor_t MWV_Init();
 void MWV_Resetter(void *data);
 
 /**
@@ -45,16 +45,18 @@ void MWV_Resetter(void *data);
  * $--MWV,x.x,a,x.x,a*hh<CR><LF>
  *
  * Field Number:
- *    1. Wind Angle, 0 to 359 degrees
- *    2. Reference, R = Relative, T = True
+ *    1. Wind Angle, 0°-359°
+ *    2. Reference, R/T
  *    3. Wind Speed
  *    4. Wind Speed Units, K/M/N
- *    5. Status, A = Data Valid, V = Invalid
+ *    5. Status, A/V
  *    6. Checksum
  *
- * @link https://gpsd.gitlab.io/gpsd/NMEA.html#_mwv_wind_speed_and_angle
+ * See also: https://gpsd.gitlab.io/gpsd/NMEA.html#_mwv_wind_speed_and_angle
+ *
  */
-void MWV_Parser(char **fields, void *data);
+void MWV_Parser(fields_t *fields, void *data);
+
 void MWV_Printer(void *data);
 
 #endif // MWV_H

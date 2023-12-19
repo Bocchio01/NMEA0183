@@ -1,10 +1,12 @@
 _local_files
+
+# Compiled source files
 *.exe
+*.out
 
 # MATLAB related files
 *.asv
 *.m~
-
 
 # STM related files
 .metadata

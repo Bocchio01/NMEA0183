@@ -2,14 +2,18 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include <time.h>
+
+#include "../NMEA0183.h"
+#include "../sensors_handler.h"
 
 #include "mwv.h"
 
-registered_sensor_t MWV_Init()
+sensor_t MWV_Init()
 {
-    registered_sensor_t sensor = {
-        .ID = MWV,
+    sensor_t sensor = {
+        .sensorID = MWV,
         .parserFunction = MWV_Parser,
         .printerFunction = MWV_Printer,
         .resetterFunction = MWV_Resetter,
@@ -32,22 +36,21 @@ void MWV_Resetter(void *data)
     MWV_data_t *typedData = (MWV_data_t *)data;
 
     typedData->angle = 0.0;
-    typedData->reference = 'N';
+    typedData->reference = MWV_REFERENCE_RELATIVE;
     typedData->speed = 0.0;
     typedData->unit = MWV_UNITS_KNOTS;
     typedData->status = MWV_STATUS_VALID;
 }
 
-void MWV_Parser(char **fields, void *data)
+void MWV_Parser(fields_t *fields, void *data)
 {
-
     MWV_data_t *typedData = (MWV_data_t *)data;
 
-    typedData->angle = strtof(fields[1], NULL);
-    typedData->reference = (MWV_reference_t) * (fields[2]);
-    typedData->speed = strtof(fields[3], NULL);
-    typedData->unit = (MWV_units_t)*fields[4];
-    typedData->status = (MWV_status_t)*fields[5];
+    typedData->angle = strtof(fields->data[1], NULL);
+    typedData->reference = (MWV_reference_t)*fields->data[2];
+    typedData->speed = strtof(fields->data[3], NULL);
+    typedData->unit = (MWV_units_t)*fields->data[4];
+    typedData->status = (MWV_status_t)*fields->data[5];
 }
 
 void MWV_Printer(void *data)

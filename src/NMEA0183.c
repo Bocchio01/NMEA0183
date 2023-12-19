@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "NMEA0183.h"
+#include "sensors_handler.h"
 
 NMEA0183_t *NMEA0183_Init()
 {
@@ -18,21 +19,17 @@ NMEA0183_t *NMEA0183_Init()
 
     nmea0183->sentence = NMEA0183_InitSentence();
     nmea0183->comunication = NMEA0183_InitComunication();
+    nmea0183->registeredSensor = NMEA0183_InitRegisteredSensor();
 
-    nmea0183->numRegisteredSensors = 0;
-    for (int i = 0; i < MAX_SENSORS; i++)
+    if (nmea0183->sentence != NULL &&
+        nmea0183->comunication != NULL &&
+        nmea0183->registeredSensor != NULL)
     {
-        nmea0183->registeredSensors[i] = NULL;
+        return nmea0183;
     }
 
-    if (nmea0183->sentence == NULL ||
-        nmea0183->comunication == NULL)
-    {
-        free(nmea0183);
-        return NULL;
-    }
-
-    return nmea0183;
+    free(nmea0183);
+    return NULL;
 }
 
 sentence_t *NMEA0183_InitSentence()
@@ -41,14 +38,14 @@ sentence_t *NMEA0183_InitSentence()
 
     if (sentence != NULL)
     {
-        for (size_t i = 0; i < MAX_FIELDS_COUNT; i++)
+        sentence->buffer = (buffer_t *)malloc(sizeof(buffer_t));
+        sentence->fields = (fields_t *)malloc(sizeof(fields_t));
+        sentence->checksum = (checksum_t *)malloc(sizeof(checksum_t));
+        if (sentence->buffer != NULL &&
+            sentence->fields != NULL &&
+            sentence->checksum != NULL)
         {
-            sentence->fields[i] = (char *)malloc(10 * sizeof(char));
-        }
-
-        if (sentence->fields != NULL)
-        {
-            NMEA0183_Reset_Sentence(sentence);
+            NMEA0183_ResetSentence(sentence);
         }
 
         return sentence;
@@ -63,8 +60,22 @@ comunication_t *NMEA0183_InitComunication()
 
     if (comunication != NULL)
     {
-        NMEA0183_Reset_Comunication(comunication);
+        NMEA0183_ResetComunication(comunication);
         return comunication;
+    }
+
+    return NULL;
+}
+
+registered_sensor_t *NMEA0183_InitRegisteredSensor()
+{
+    registered_sensor_t *registeredSensor = (registered_sensor_t *)malloc(sizeof(registered_sensor_t));
+
+    if (registeredSensor != NULL)
+    {
+        registeredSensor->sizeOf = 0;
+        NMEA0183_ResetRegisteredSensor(registeredSensor);
+        return registeredSensor;
     }
 
     return NULL;
@@ -72,39 +83,43 @@ comunication_t *NMEA0183_InitComunication()
 
 void NMEA0183_Reset(NMEA0183_t *nmea0183)
 {
-    NMEA0183_Reset_Sentence(nmea0183->sentence);
-    NMEA0183_Reset_Comunication(nmea0183->comunication);
-
-    for (uint8_t i = 0; i < nmea0183->numRegisteredSensors; i++)
-    {
-        registered_sensor_t *sensor = nmea0183->registeredSensors[i];
-        sensor->resetterFunction(sensor->data);
-    }
+    NMEA0183_ResetSentence(nmea0183->sentence);
+    NMEA0183_ResetComunication(nmea0183->comunication);
+    NMEA0183_ResetRegisteredSensor(nmea0183->registeredSensor);
 }
 
-void NMEA0183_Reset_Sentence(sentence_t *sentence)
+void NMEA0183_ResetSentence(sentence_t *sentence)
 {
-    sentence->length = 0;
-    memset(sentence->buffer, 0, SENTENCE_MAX_LEGTH);
-    sentence->talkerID = UNKNOWN;
-    sentence->numberOfFields = 0;
-    for (size_t i = 0; i < MAX_FIELDS_COUNT; i++)
+    sentence->buffer->sizeOf = 0;
+    memset(sentence->buffer->data, 0, SENTENCE_MAX_LEGTH);
+    sentence->sensorID = UNKNOWN;
+    sentence->fields->sizeOf = 0;
+    for (size_t i = 0; i < FIELDS_MAX_COUNT; i++)
     {
-        memset(sentence->fields[i], 0, 10);
+        memset(sentence->fields->data[i], 0, FIELD_MAX_LENGTH);
     }
-    sentence->checksum = 0;
-    sentence->isChecksumValid = false;
+    sentence->checksum->value = 0;
+    sentence->checksum->isValid = false;
 }
 
-void NMEA0183_Reset_Comunication(comunication_t *comunication)
+void NMEA0183_ResetComunication(comunication_t *comunication)
 {
     comunication->stage = COMUNICATION_STAGE_WAITING;
     comunication->status = COMUNICATION_STATUS_OK;
 }
 
-void NMEA0183_RegisterSensor(NMEA0183_t *nmea0183, registered_sensor_t sensor_value)
+void NMEA0183_ResetRegisteredSensor(registered_sensor_t *registeredSensor)
 {
-    registered_sensor_t *sensor_pointer = (registered_sensor_t *)malloc(sizeof(registered_sensor_t));
+    for (uint8_t i = 0; i < registeredSensor->sizeOf; i++)
+    {
+        sensor_t *sensor = registeredSensor->sensor[i];
+        sensor->resetterFunction(sensor->data);
+    }
+}
+
+void NMEA0183_RegisterSensor(NMEA0183_t *nmea0183, sensor_t sensor_value)
+{
+    sensor_t *sensor_pointer = (sensor_t *)malloc(sizeof(sensor_t));
 
     if (sensor_pointer == NULL)
     {
@@ -112,13 +127,13 @@ void NMEA0183_RegisterSensor(NMEA0183_t *nmea0183, registered_sensor_t sensor_va
         return;
     }
 
-    sensor_pointer->ID = sensor_value.ID;
+    sensor_pointer->sensorID = sensor_value.sensorID;
     sensor_pointer->parserFunction = sensor_value.parserFunction;
     sensor_pointer->printerFunction = sensor_value.printerFunction;
     sensor_pointer->resetterFunction = sensor_value.resetterFunction;
     sensor_pointer->data = sensor_value.data;
 
-    nmea0183->registeredSensors[nmea0183->numRegisteredSensors++] = sensor_pointer;
+    nmea0183->registeredSensor->sensor[nmea0183->registeredSensor->sizeOf++] = sensor_pointer;
 }
 
 void NMEA0183_Update(NMEA0183_t *nmea0183, uint8_t c)
@@ -142,14 +157,13 @@ void NMEA0183_Update(NMEA0183_t *nmea0183, uint8_t c)
         {
             nmea0183->comunication->stage = COMUNICATION_STAGE_ANALYZING;
             NMEA0183_AnalyzeData(nmea0183);
-            printf("ID: %d\n", nmea0183->sentence->talkerID);
             if (nmea0183->comunication->status == COMUNICATION_STATUS_ERROR)
             {
                 break;
             }
 
             nmea0183->comunication->stage = COMUNICATION_STAGE_DONE;
-            // NMEA0183_PrintData(nmea0183);
+            NMEA0183_PrintData(nmea0183);
             NMEA0183_Reset(nmea0183);
         }
 
@@ -169,45 +183,51 @@ void NMEA0183_Update(NMEA0183_t *nmea0183, uint8_t c)
 
 void NMEA0183_AddToBuffer(NMEA0183_t *nmea0183, uint8_t c)
 {
-    if (nmea0183->sentence->length >= SENTENCE_MAX_LEGTH)
+    if (nmea0183->sentence->buffer->sizeOf >= SENTENCE_MAX_LEGTH)
     {
         nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
         return;
     }
 
-    nmea0183->sentence->buffer[nmea0183->sentence->length] = c;
-    nmea0183->sentence->length++;
+    nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf] = c;
+    nmea0183->sentence->buffer->sizeOf++;
 }
 
 void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183)
 {
 
-    if (nmea0183->sentence->buffer[0] != SENTENCE_CHARACTER_START)
+    if (nmea0183->sentence->buffer->data[0] != SENTENCE_CHARACTER_START)
     {
         nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
         return;
     }
 
-    if (nmea0183->sentence->buffer[nmea0183->sentence->length - 1] != SENTENCE_CHARACTER_END &&
-        nmea0183->sentence->buffer[nmea0183->sentence->length - 1] != SENTENCE_CHARACTER_END_LF &&
-        nmea0183->sentence->buffer[nmea0183->sentence->length - 1] != SENTENCE_CHARACTER_END_CR)
+    if (nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf - 1] != SENTENCE_CHARACTER_END &&
+        nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf - 1] != SENTENCE_CHARACTER_END_LF &&
+        nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf - 1] != SENTENCE_CHARACTER_END_CR)
     {
         nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
         return;
     }
 
-    if (nmea0183->sentence->buffer[nmea0183->sentence->length - 4] != SENTENCE_CHARACTER_CHECKSUM_START)
+    if (nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf - 4] != SENTENCE_CHARACTER_CHECKSUM_START)
     {
         nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
         return;
     }
 
-    NMEA0183_GetTalkerID(nmea0183);
+    NMEA0183_GetSensorID(nmea0183);
+    if (nmea0183->sentence->sensorID == UNKNOWN)
+    {
+        nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
+        return;
+    }
+
     NMEA0183_GetFields(nmea0183);
     NMEA0183_GetChecksum(nmea0183);
 
-    nmea0183->sentence->isChecksumValid = (nmea0183->sentence->checksum == NMEA0183_ComputeChecksum(nmea0183->sentence->buffer, nmea0183->sentence->length));
-    if (nmea0183->sentence->isChecksumValid == false)
+    nmea0183->sentence->checksum->isValid = (nmea0183->sentence->checksum->value == NMEA0183_ComputeChecksum(nmea0183->sentence->buffer->data, nmea0183->sentence->buffer->sizeOf));
+    if (nmea0183->sentence->checksum->isValid == false)
     {
         nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
         return;
@@ -216,58 +236,53 @@ void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183)
     NMEA0183_ParseData(nmea0183);
 }
 
-void NMEA0183_GetTalkerID(NMEA0183_t *nmea0183)
+void NMEA0183_GetSensorID(NMEA0183_t *nmea0183)
 {
-    sensor_association_t associations[] = {
-        {"IIMWV", MWV},
-        {"WIXDR", XDR},
-        {NULL, UNKNOWN}};
-
-    char talkerID[10] = {0};
+    char sensorID[FIELD_MAX_LENGTH] = {0};
 
     uint8_t i = 1; // Skip over the $ at the begining of the sentence
-    while (nmea0183->sentence->buffer[i] != SENTENCE_CHARACTER_DELIMITER && i < nmea0183->sentence->length)
+    while (nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_DELIMITER && i < nmea0183->sentence->buffer->sizeOf)
     {
-        talkerID[i - 1] = nmea0183->sentence->buffer[i];
+        sensorID[i - 1] = nmea0183->sentence->buffer->data[i];
         i++;
     }
 
-    for (i = 0; associations[i].sensorTypeString != NULL; i++)
+    for (i = 0; sensorAssociation[i].sensorTypeString != NULL; i++)
     {
-        if (strcmp(talkerID, associations[i].sensorTypeString) == 0)
+        if (strcmp(sensorID, sensorAssociation[i].sensorTypeString) == 0)
         {
-            nmea0183->sentence->talkerID = associations[i].sensorType;
+            nmea0183->sentence->sensorID = sensorAssociation[i].sensorType;
             return;
         }
     }
 
-    nmea0183->sentence->talkerID = UNKNOWN;
+    nmea0183->sentence->sensorID = UNKNOWN;
 }
 
 void NMEA0183_GetFields(NMEA0183_t *nmea0183)
 {
-    nmea0183->sentence->numberOfFields = 0;
+    nmea0183->sentence->fields->sizeOf = 0;
     uint8_t i = 0;
     uint8_t j = 0;
-    char tmp[10] = {0};
+    char tmp[FIELD_MAX_LENGTH] = {0};
 
-    while (i < nmea0183->sentence->length &&
-           nmea0183->sentence->buffer[i] != SENTENCE_CHARACTER_CHECKSUM_START &&
-           nmea0183->sentence->buffer[i] != SENTENCE_CHARACTER_END &&
-           nmea0183->sentence->buffer[i] != SENTENCE_CHARACTER_END_CR &&
-           nmea0183->sentence->buffer[i] != SENTENCE_CHARACTER_END_LF)
+    while (i < nmea0183->sentence->buffer->sizeOf &&
+           nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_CHECKSUM_START &&
+           nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_END &&
+           nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_END_CR &&
+           nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_END_LF)
     {
-        if (nmea0183->sentence->buffer[i] != SENTENCE_CHARACTER_DELIMITER)
+        if (nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_DELIMITER)
         {
-            tmp[j] = nmea0183->sentence->buffer[i];
+            tmp[j] = nmea0183->sentence->buffer->data[i];
             j++;
         }
         else
         {
             tmp[j] = '\0';
-            strncpy(nmea0183->sentence->fields[nmea0183->sentence->numberOfFields++], tmp, 10);
+            strncpy(nmea0183->sentence->fields->data[nmea0183->sentence->fields->sizeOf++], tmp, FIELD_MAX_LENGTH);
 
-            memset(tmp, 0, SENTENCE_MAX_LEGTH);
+            memset(tmp, 0, FIELD_MAX_LENGTH);
             j = 0;
         }
 
@@ -277,13 +292,13 @@ void NMEA0183_GetFields(NMEA0183_t *nmea0183)
     if (tmp[0] != '\0')
     {
         tmp[j] = '\0';
-        strncpy(nmea0183->sentence->fields[nmea0183->sentence->numberOfFields++], tmp, 10);
+        strncpy(nmea0183->sentence->fields->data[nmea0183->sentence->fields->sizeOf++], tmp, FIELD_MAX_LENGTH);
     }
 }
 
 void NMEA0183_GetChecksum(NMEA0183_t *nmea0183)
 {
-    nmea0183->sentence->checksum = (uint8_t)strtol(&nmea0183->sentence->buffer[nmea0183->sentence->length - 3], NULL, 16);
+    nmea0183->sentence->checksum->value = (uint8_t)strtol(&nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf - 3], NULL, 16);
 }
 
 uint8_t NMEA0183_ComputeChecksum(char *buffer, uint8_t length)
@@ -302,15 +317,20 @@ uint8_t NMEA0183_ComputeChecksum(char *buffer, uint8_t length)
 
 void NMEA0183_ParseData(NMEA0183_t *nmea0183)
 {
-    sensor_t sensorType = nmea0183->sentence->talkerID;
+    sensor_ID_t sensorType = nmea0183->sentence->sensorID;
 
-    for (uint8_t i = 0; i < nmea0183->numRegisteredSensors; i++)
+    for (uint8_t i = 0; i < nmea0183->registeredSensor->sizeOf; i++)
     {
-        registered_sensor_t *sensor = nmea0183->registeredSensors[i];
+        sensor_t *sensor = nmea0183->registeredSensor->sensor[i];
 
-        if (sensor->ID == sensorType)
+        if (sensor->sensorID == sensorType)
         {
             sensor->parserFunction(nmea0183->sentence->fields, sensor->data);
+            if (sensor->data == NULL)
+            {
+                nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
+            }
+
             return;
         }
     }
@@ -321,13 +341,13 @@ void NMEA0183_ParseData(NMEA0183_t *nmea0183)
 void NMEA0183_PrintData(NMEA0183_t *nmea0183)
 {
 
-    sensor_t sensorType = nmea0183->sentence->talkerID;
+    sensor_ID_t sensorType = nmea0183->sentence->sensorID;
 
-    for (uint8_t i = 0; i < nmea0183->numRegisteredSensors; i++)
+    for (uint8_t i = 0; i < nmea0183->registeredSensor->sizeOf; i++)
     {
-        registered_sensor_t *sensor = nmea0183->registeredSensors[i];
+        sensor_t *sensor = nmea0183->registeredSensor->sensor[i];
 
-        if (sensor->ID == sensorType)
+        if (sensor->sensorID == sensorType)
         {
             sensor->printerFunction(sensor->data);
             return;
