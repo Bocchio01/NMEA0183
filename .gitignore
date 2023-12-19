@@ -1,6 +1,5 @@
 _local_files
-# Windex/Core/Inc/windex.h
-# Windex/Core/Src/windex.c
+*.exe
 
 # MATLAB related files
 *.asv

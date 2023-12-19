@@ -1,5 +1,20 @@
 {
     "files.associations": {
-        "windex.h": "c"
+        "bit": "c",
+        "compare": "c",
+        "cstddef": "c",
+        "functional": "c",
+        "iterator": "c",
+        "limits": "c",
+        "memory": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "vector": "c",
+        "xhash": "c",
+        "xiosbase": "c",
+        "xlocale": "c",
+        "xutility": "c",
+        "mwv.h": "c",
+        "sensors_handler.h": "c"
     }
 }
