@@ -9,7 +9,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 #include "mwv.h"
 
@@ -106,17 +105,12 @@ void MWV_Printer(void *data)
         break;
     }
 
-    time_t currentTime;
-    time(&currentTime);
-    struct tm *localTime = localtime(&currentTime);
-
-    printf("----------------------\n");
-    printf("MWV ([%02d:%02d:%02d])\n", localTime->tm_hour, localTime->tm_min, localTime->tm_sec);
+    printf("----------MWV----------\n");
     printf("Angle:\t%.2f\n", typedData->angle);
     printf("Ref.:\t%s\n", referenceString);
     printf("Speed:\t%.2f\n", typedData->speed);
     printf("Unit:\t%s\n", unitString);
     printf("Status:\t%s\n", statusString);
-    printf("----------------------\n");
+    printf("-----------------------\n");
     printf("\n");
 }

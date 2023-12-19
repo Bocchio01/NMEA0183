@@ -9,9 +9,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
-#include "XDR.h"
+#include "xdr.h"
 
 sensor_t XDR_Init()
 {
@@ -73,16 +72,11 @@ void XDR_Printer(void *data)
         break;
     }
 
-    time_t currentTime;
-    time(&currentTime);
-    struct tm *localTime = localtime(&currentTime);
-
-    printf("----------------------\n");
-    printf("XDR ([%02d:%02d:%02d])\n", localTime->tm_hour, localTime->tm_min, localTime->tm_sec);
+    printf("----------XDR----------\n");
     printf("Type:\t%c\n", typedData->type);
     printf("Temp.:\t%.2f\n", typedData->temperature);
     printf("Unit:\t%s\n", unitString);
     printf("Name:\t%s\n", typedData->name);
-    printf("----------------------\n");
+    printf("-----------------------\n");
     printf("\n");
 }

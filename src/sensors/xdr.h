@@ -11,7 +11,7 @@
 #ifndef XDR_H
 #define XDR_H
 
-#include "../sensors_handler.h"
+#include "../sensors.h"
 
 typedef enum
 {

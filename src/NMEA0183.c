@@ -13,7 +13,7 @@
 #include <stdio.h>
 
 #include "NMEA0183.h"
-#include "sensors_handler.h"
+#include "sensors.h"
 
 NMEA0183_t *NMEA0183_Init()
 {

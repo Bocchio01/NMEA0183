@@ -11,7 +11,7 @@
 #ifndef MWV_H
 #define MWV_H
 
-#include "../sensors_handler.h"
+#include "../sensors.h"
 
 typedef enum
 {

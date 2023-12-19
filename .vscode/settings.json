@@ -15,8 +15,9 @@
         "xlocale": "c",
         "xutility": "c",
         "mwv.h": "c",
-        "sensors_handler.h": "c",
+        "sensors.h": "c",
         "stdint.h": "c",
-        "xstring": "c"
+        "xstring": "c",
+        "xdr.h": "c"
     }
 }

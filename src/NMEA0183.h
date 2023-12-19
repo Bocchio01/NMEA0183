@@ -8,7 +8,7 @@
  * @author Windex Team
  * @date 19/12/2023
  *
- * @see sensors_handler.h
+ * @see sensors.h
  */
 
 #ifndef NMEA0183_H
@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "sensors_handler.h"
+#include "sensors.h"
 
 #define SENTENCE_MAX_LEGTH 82 + 1
 #define SENTENCE_CHARACTER_START 0x24
@@ -49,7 +49,7 @@ typedef struct
 } buffer_t;
 
 // TODO: resolve circular dependency
-// struct fields_t: Declared in sensors_handler.h;
+// struct fields_t: Declared in sensors.h;
 
 typedef struct
 {

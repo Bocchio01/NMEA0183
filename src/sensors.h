@@ -1,6 +1,6 @@
 /**
- * @file sensors_handler.h
- * @brief NMEA0183 Sensors Handler
+ * @file sensors.h
+ * @brief NMEA0183 Sensors
  *
  * This file contains the definition of the structures that identify the
  * sensors and the functions that handle them.
@@ -9,8 +9,8 @@
  * @date 19/12/2023
  */
 
-#ifndef SENSORS_HANDLER_H
-#define SENSORS_HANDLER_H
+#ifndef SENSORS_H
+#define SENSORS_H
 
 #include <stdint.h>
 
@@ -50,6 +50,6 @@ typedef struct
     void *data;
 } sensor_t;
 
-sensor_association_t sensorAssociation[SENSOR_MAX_NUMBER];
+extern sensor_association_t sensorAssociation[SENSOR_MAX_NUMBER];
 
-#endif // SENSORS_HANDLER_H
+#endif // SENSORS_H
