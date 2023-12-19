@@ -1,12 +1,15 @@
+/**
+ * @file MWV.c
+ * @brief MWV Sensor Implementation
+ *
+ * @author Windex Team
+ * @date 19/12/2023
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <time.h>
-
-#include "../NMEA0183.h"
-#include "../sensors_handler.h"
 
 #include "mwv.h"
 

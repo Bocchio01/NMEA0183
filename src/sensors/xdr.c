@@ -1,3 +1,10 @@
+/**
+ * @file XDR.c
+ * @brief XDR Sensor Implementation
+ *
+ * @author Windex Team
+ * @date 19/12/2023
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -72,7 +79,7 @@ void XDR_Printer(void *data)
 
     printf("----------------------\n");
     printf("XDR ([%02d:%02d:%02d])\n", localTime->tm_hour, localTime->tm_min, localTime->tm_sec);
-    printf("Type:\t%cf\n", typedData->type);
+    printf("Type:\t%c\n", typedData->type);
     printf("Temp.:\t%.2f\n", typedData->temperature);
     printf("Unit:\t%s\n", unitString);
     printf("Name:\t%s\n", typedData->name);

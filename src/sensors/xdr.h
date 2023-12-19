@@ -1,6 +1,11 @@
 /**
+ * @file XDR.h
+ * @brief XDR Sensor
+ *
+ * Sensor module: XDR (Transducer Measurement)
+ *
  * @author Windex Team
- * @date 18/12/2023
+ * @date 19/12/2023
  */
 
 #ifndef XDR_H
@@ -27,10 +32,28 @@ typedef struct
     char name[];
 } XDR_data_t;
 
+/**
+ * @brief Initializes the XDR sensor.
+ *
+ * @return sensor_t The XDR sensor.
+ */
 sensor_t XDR_Init();
+
+/**
+ * @brief Resets the XDR sensor data.
+ *
+ * @param data The XDR sensor data.
+ */
 void XDR_Resetter(void *data);
 
 /**
+ * @brief Parses the XDR sentence.
+ *
+ * @param fields The fields of the XDR sentence.
+ * @param data The XDR sensor data.
+ *
+ * @link https://gpsd.gitlab.io/gpsd/NMEA.html#_xdr_transducer_measurement
+ * @note
  *         1 2   3 4            n
  *         | |   | |            |
  *  $--XDR,a,x.x,a,c--c, ..... *hh<CR><LF>
@@ -41,12 +64,14 @@ void XDR_Resetter(void *data);
  *    3. Units of measurement, C/F
  *    4. Name of transducer
  *    5. Checksum
- *
- * See also: https://gpsd.gitlab.io/gpsd/NMEA.html#_xdr_transducer_measurement
- *
  */
 void XDR_Parser(fields_t *fields, void *data);
 
+/**
+ * @brief Prints the XDR sensor data.
+ *
+ * @param data The XDR sensor data.
+ */
 void XDR_Printer(void *data);
 
 #endif // XDR_H

@@ -1,3 +1,11 @@
+/**
+ * @file NMEA0183.c
+ * @brief NMEA0183 Protocol Handling Library Implementation
+ *
+ * @author Windex Team
+ * @date 19/12/2023
+ */
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <string.h>
@@ -136,7 +144,7 @@ void NMEA0183_RegisterSensor(NMEA0183_t *nmea0183, sensor_t sensor_value)
     nmea0183->registeredSensor->sensor[nmea0183->registeredSensor->sizeOf++] = sensor_pointer;
 }
 
-void NMEA0183_Update(NMEA0183_t *nmea0183, uint8_t c)
+void NMEA0183_CharacterHandler(NMEA0183_t *nmea0183, uint8_t c)
 {
 
     switch (nmea0183->comunication->stage)

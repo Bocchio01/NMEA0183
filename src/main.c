@@ -26,7 +26,7 @@ int main()
 
     while ((c = fgetc(file)) != EOF)
     {
-        NMEA0183_Update(nmea0183, c);
+        NMEA0183_CharacterHandler(nmea0183, c);
     }
 
     fclose(file);

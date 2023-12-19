@@ -1,18 +1,12 @@
 /**
  * @file sensors_handler.h
- * @brief This file contains the definition of the data structures and
- * functions related to the sensors handler.
+ * @brief NMEA0183 Sensors Handler
  *
- * The sensors handler is responsible for registering the sensors and
- * calling the correct parser function for each sensor.
- *
- * The sensors handler is implemented in Windex/src/sensors_handler.c.
- *
- * @see Windex/src/sensors_handler.c
- * @see Windex/src/NMEA0183.c
+ * This file contains the definition of the structures that identify the
+ * sensors and the functions that handle them.
  *
  * @author Windex Team
- * @date 18/12/2023
+ * @date 19/12/2023
  */
 
 #ifndef SENSORS_HANDLER_H
@@ -22,7 +16,7 @@
 
 #define FIELDS_MAX_COUNT 20
 #define FIELD_MAX_LENGTH 10
-#define MAX_SENSORS 10
+#define SENSOR_MAX_NUMBER 3
 
 typedef struct
 {
@@ -56,6 +50,6 @@ typedef struct
     void *data;
 } sensor_t;
 
-sensor_association_t sensorAssociation[3];
+sensor_association_t sensorAssociation[SENSOR_MAX_NUMBER];
 
 #endif // SENSORS_HANDLER_H

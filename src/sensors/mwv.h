@@ -1,6 +1,11 @@
 /**
+ * @file MWV.h
+ * @brief MWV Sensor
+ *
+ * Sensor module: MWV (Wind Speed and Angle)
+ *
  * @author Windex Team
- * @date 18/12/2023
+ * @date 19/12/2023
  */
 
 #ifndef MWV_H
@@ -36,10 +41,28 @@ typedef struct
     MWV_status_t status;
 } MWV_data_t;
 
+/**
+ * @brief Initializes the MWV sensor.
+ *
+ * @return sensor_t The MWV sensor.
+ */
 sensor_t MWV_Init();
+
+/**
+ * @brief Resets the MWV sensor data.
+ *
+ * @param data The MWV sensor data.
+ */
 void MWV_Resetter(void *data);
 
 /**
+ * @brief Parses the MWV sentence.
+ *
+ * @param fields The fields of the MWV sentence.
+ * @param data The MWV sensor data.
+ *
+ * @link https://gpsd.gitlab.io/gpsd/NMEA.html#_mwv_wind_speed_and_angle
+ * @note
  *        1   2 3   4 5
  *        |   | |   | |
  * $--MWV,x.x,a,x.x,a*hh<CR><LF>
@@ -51,12 +74,14 @@ void MWV_Resetter(void *data);
  *    4. Wind Speed Units, K/M/N
  *    5. Status, A/V
  *    6. Checksum
- *
- * See also: https://gpsd.gitlab.io/gpsd/NMEA.html#_mwv_wind_speed_and_angle
- *
  */
 void MWV_Parser(fields_t *fields, void *data);
 
+/**
+ * @brief Prints the MWV sensor data.
+ *
+ * @param data The MWV sensor data.
+ */
 void MWV_Printer(void *data);
 
 #endif // MWV_H
