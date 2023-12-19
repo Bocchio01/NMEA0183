@@ -4,6 +4,7 @@
 
 #include "NMEA0183.h"
 #include "sensors/mwv.h"
+#include "sensors/xdr.h"
 
 int main()
 {
@@ -21,6 +22,7 @@ int main()
 
     NMEA0183_t *nmea0183 = NMEA0183_Init();
     NMEA0183_RegisterSensor(nmea0183, MWV_Init());
+    NMEA0183_RegisterSensor(nmea0183, XDR_Init());
 
     while ((c = fgetc(file)) != EOF)
     {
