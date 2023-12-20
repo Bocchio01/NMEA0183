@@ -10,7 +10,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef STM32
+#include "sensors/xdr.h"
+#else
 #include "xdr.h"
+#endif
 
 sensor_t XDR_Init()
 {

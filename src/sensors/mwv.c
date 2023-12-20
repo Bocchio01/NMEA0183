@@ -10,7 +10,11 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef STM32
+#include "sensors/mwv.h"
+#else
 #include "mwv.h"
+#endif
 
 sensor_t MWV_Init()
 {

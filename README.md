@@ -64,7 +64,13 @@ To use the library with STM32, follow these steps:
 
 2. Generate the code
 
-3. Copy and paste the library files inside the `Core` folder of your STM32 project keeping the following structure:
+3. Add the `STM32` preprocessor symbol to your STM32CubeMX project ([guide](https://community.st.com/t5/stm32cubeide-mcus/how-to-add-preprocessor-symbol-in-stm32cube-ide/td-p/273765)):
+
+   1. Right click on the project name and select `Properties`
+   2. Go to `C/C++ Build` -> `Settings` -> `Tool Settings` -> `MCU GCC Compiler` -> `Preprocessor`
+   3. Click on `Add` and insert `STM32`
+
+4. Copy and paste the library files inside the `Core` folder of your STM32 project keeping the following structure:
 
 ```bash
 Core
@@ -82,13 +88,6 @@ Core
     └── sensors.c
 ```
 
-4. Open each `SENSOR_*.h` file (e.g. `mwv.h`), and substitute the following line:
-
-```c
-#include "SENSOR_*.h" // -> Previous line
-#include "sensors/SENSOR_*.h" // -> New line
-```
-
 5. Open the `main.c` file and add the following code:
 
 ```c
@@ -99,10 +98,6 @@ Core
 #include "sensors/mwv.h"
 #include "sensors/xdr.h"
 /* USER CODE END Includes */
-
-/* USER CODE BEGIN PD */
-#define STM32
-/* USER CODE END PD */
 
 /* USER CODE BEGIN PV */
 uint8_t UART2_rxBuffer[2] = {0};
