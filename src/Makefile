@@ -1,4 +1,4 @@
-.PHONY: Main Launch ToSTM clean
+.PHONY: Main Launch ToSTM Documentation GenerateDataset clean
 
 CC = gcc
 SRCS = main.c NMEA0183.c sensors.c sensors/*.c
@@ -26,6 +26,15 @@ ToSTM: Main
 	@copy sensors\*.c $(STM_Src)\sensors
 
 	@echo Copy operation complete
+
+Documentation: Doxyfile
+	@doxygen
+	@echo Documentation generated
+
+GenerateDataset: utils/generate_dataset.c
+	$(CC) NMEA0183.c sensors.c utils/generate_dataset.c -o utils/generate_dataset
+	@utils/generate_dataset.exe
+	@echo Dataset generated
 
 clean:
 	del /Q $(TARGET).exe
