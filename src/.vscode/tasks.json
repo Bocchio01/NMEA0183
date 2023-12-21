@@ -7,10 +7,10 @@
             "command": "gcc",
             "args": [
                 "-g",
-                "${workspaceFolder}/src/*.c",
-                "${workspaceFolder}/src/sensors/*.c",
+                "${workspaceFolder}/*.c",
+                "${workspaceFolder}/sensors/*.c",
                 "-o",
-                "${workspaceFolder}/src/main.exe"
+                "${workspaceFolder}/main.exe"
             ],
             "group": {
                 "kind": "build",

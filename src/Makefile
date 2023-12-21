@@ -1,40 +1,39 @@
-.PHONY: Main Launch ToSTM Documentation GenerateDataset clean
+.PHONY: compile run toSTM doxy clean
 
 CC = gcc
-SRCS = main.c NMEA0183.c sensors.c sensors/*.c
+FLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -O2
+SRCS = *.c sensors/*.c
 TARGET = main
 
-STM_Inc = ..\STM_Windex\Core\Inc
-STM_Src = ..\STM_Windex\Core\Src
+STM_Path = ..\STM_Windex
+STM_Path_Inc = $(STM_Path)\Core\Inc
+STM_Path_Src = $(STM_Path)\Core\Src
 
-all: Launch
+all: run
 
-Main: $(SRCS)
-	$(CC) $(SRCS) -o $(TARGET)
-	@echo =================================
+compile: $(SRCS)
+	$(CC) $(FLAGS) $(SRCS) -o $(TARGET)
+	@echo Compilation complete
 
-Launch: Main
+run: compile
 	@$(TARGET).exe
+	@echo Done runnig complete
 
-ToSTM: Main
-	@copy NMEA0183.h $(STM_Inc)
-	@copy sensors.h $(STM_Inc)
-	@copy sensors\*.h $(STM_Inc)\sensors
+# We must NOT copy main.c and main.h to STM project
+toSTM: compile
+	@copy NMEA0183.h $(STM_Path_Inc)
+	@copy sensors.h $(STM_Path_Inc)
+	@copy sensors\*.h $(STM_Path_Inc)\sensors
 
-	@copy NMEA0183.c $(STM_Src)
-	@copy sensors.c $(STM_Src)
-	@copy sensors\*.c $(STM_Src)\sensors
+	@copy NMEA0183.c $(STM_Path_Src)
+	@copy sensors.c $(STM_Path_Src)
+	@copy sensors\*.c $(STM_Path_Src)\sensors
 
-	@echo Copy operation complete
+	@echo Copy operation to STM project complete
 
-Documentation: Doxyfile
+doxy: Doxyfile
 	@doxygen
-	@echo Documentation generated
-
-GenerateDataset: utils/generate_dataset.c
-	$(CC) NMEA0183.c sensors.c utils/generate_dataset.c -o utils/generate_dataset
-	@utils/generate_dataset.exe
-	@echo Dataset generated
+	@echo Doxygen documentation generated
 
 clean:
 	del /Q $(TARGET).exe
