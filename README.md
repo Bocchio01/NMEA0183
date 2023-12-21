@@ -114,8 +114,8 @@ NMEA0183_t *nmea0183;
 
 PUTCHAR_PROTOTYPE
 {
-  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
-  return ch;
+   HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+   return ch;
 }
 /* USER CODE END PFP */
 
@@ -131,8 +131,15 @@ HAL_UART_Receive_IT(&huart2, UART2_rxBuffer, 1);
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 {
-	NMEA0183_CharacterHandler(nmea0183, UART2_rxBuffer[0]);
-	HAL_UART_Receive_IT(&huart2, UART2_rxBuffer, 1);
+   NMEA0183_CharacterHandler(nmea0183, UART2_rxBuffer[0]);
+
+   if (NMEA0183_IsDataReady(nmea0183))
+   {
+      NMEA0183_PrintData(nmea0183);
+      NMEA0183_Reset(nmea0183);
+   }
+
+   HAL_UART_Receive_IT(&huart2, UART2_rxBuffer, 1);
 }
 /* USER CODE END 4 */
 

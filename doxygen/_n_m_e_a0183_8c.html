@@ -142,6 +142,9 @@ Functions</h2></td></tr>
 <tr class="memitem:a7e26b894ba0818df8d0b18d543f9d904" id="r_a7e26b894ba0818df8d0b18d543f9d904"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_n_m_e_a0183_8c.html#a7e26b894ba0818df8d0b18d543f9d904">NMEA0183_PrintData</a> (<a class="el" href="struct_n_m_e_a0183__t.html">NMEA0183_t</a> *nmea0183)</td></tr>
 <tr class="memdesc:a7e26b894ba0818df8d0b18d543f9d904"><td class="mdescLeft">&#160;</td><td class="mdescRight">Print data.  <br /></td></tr>
 <tr class="separator:a7e26b894ba0818df8d0b18d543f9d904"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae19e8bead64224b1e2c26840d5b5f486" id="r_ae19e8bead64224b1e2c26840d5b5f486"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="_n_m_e_a0183_8c.html#ae19e8bead64224b1e2c26840d5b5f486">NMEA0183_IsDataReady</a> (<a class="el" href="struct_n_m_e_a0183__t.html">NMEA0183_t</a> *nmea0183)</td></tr>
+<tr class="memdesc:ae19e8bead64224b1e2c26840d5b5f486"><td class="mdescLeft">&#160;</td><td class="mdescRight">Is data ready.  <br /></td></tr>
+<tr class="separator:ae19e8bead64224b1e2c26840d5b5f486"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>NMEA0183 Protocol Handling Library Implementation. </p>
@@ -474,6 +477,34 @@ Functions</h2></td></tr>
 <p>Create space in memory for <a class="el" href="structsentence__t.html">sentence_t</a> struct and initialize it with default values.</p>
 <dl class="section return"><dt>Returns</dt><dd>sentence_t*</dd></dl>
 <dl class="section see"><dt>See also</dt><dd><a class="el" href="_n_m_e_a0183_8h.html#a52d9960243a7519ca2c6f5108d3dcf23" title="Reset sentence_t struct.">NMEA0183_ResetSentence()</a> </dd></dl>
+
+</div>
+</div>
+<a id="ae19e8bead64224b1e2c26840d5b5f486" name="ae19e8bead64224b1e2c26840d5b5f486"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae19e8bead64224b1e2c26840d5b5f486">&#9670;&#160;</a></span>NMEA0183_IsDataReady()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool NMEA0183_IsDataReady </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="struct_n_m_e_a0183__t.html">NMEA0183_t</a> *&#160;</td>
+          <td class="paramname"><em>nmea0183</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Is data ready. </p>
+<p>Check if data are ready to be sent to the user.</p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">*nmea0183</td><td>pointer to <a class="el" href="struct_n_m_e_a0183__t.html">NMEA0183_t</a> struct</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>bool true if data are ready, false otherwise </dd></dl>
 
 </div>
 </div>

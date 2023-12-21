@@ -54,9 +54,8 @@ sentence_t *NMEA0183_InitSentence()
             sentence->checksum != NULL)
         {
             NMEA0183_ResetSentence(sentence);
+            return sentence;
         }
-
-        return sentence;
     }
 
     return NULL;
@@ -171,8 +170,6 @@ void NMEA0183_CharacterHandler(NMEA0183_t *nmea0183, uint8_t c)
             }
 
             nmea0183->comunication->stage = COMUNICATION_STAGE_DONE;
-            NMEA0183_PrintData(nmea0183);
-            NMEA0183_Reset(nmea0183);
         }
 
     case COMUNICATION_STAGE_DONE:
@@ -363,4 +360,10 @@ void NMEA0183_PrintData(NMEA0183_t *nmea0183)
     }
 
     nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
+}
+
+bool NMEA0183_IsDataReady(NMEA0183_t *nmea0183)
+{
+    return (nmea0183->comunication->stage == COMUNICATION_STAGE_DONE) &&
+           (nmea0183->comunication->status == COMUNICATION_STATUS_OK);
 }

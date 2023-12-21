@@ -289,4 +289,15 @@ void NMEA0183_ParseData(NMEA0183_t *nmea0183);
  */
 void NMEA0183_PrintData(NMEA0183_t *nmea0183);
 
+/**
+ * @brief Is data ready
+ *
+ * Check if data are ready to be sent to the user.
+ *
+ * @param *nmea0183 pointer to NMEA0183_t struct
+ *
+ * @return bool true if data are ready, false otherwise
+ */
+bool NMEA0183_IsDataReady(NMEA0183_t *nmea0183);
+
 #endif // NMEA0183_H

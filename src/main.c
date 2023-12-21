@@ -10,9 +10,9 @@ int main()
 {
 
     int c;
-    const char *filenameDatalogs = "../datalogs/2023-12-15.txt";
+    char filenameDataset[] = "../telemetry/Generated_Dataset.txt";
 
-    FILE *file = fopen(filenameDatalogs, "r");
+    FILE *file = fopen(filenameDataset, "r");
 
     if (file == NULL)
     {
@@ -27,6 +27,12 @@ int main()
     while ((c = fgetc(file)) != EOF)
     {
         NMEA0183_CharacterHandler(nmea0183, c);
+
+        if (NMEA0183_IsDataReady(nmea0183))
+        {
+            NMEA0183_PrintData(nmea0183);
+            NMEA0183_Reset(nmea0183);
+        }
     }
 
     fclose(file);

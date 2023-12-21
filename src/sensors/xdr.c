@@ -76,11 +76,11 @@ void XDR_Printer(void *data)
         break;
     }
 
-    printf("----------XDR----------\n");
+    printf("XDR--------------------\n");
     printf("Type:\t%c\n", typedData->type);
     printf("Temp.:\t%.2f\n", typedData->temperature);
     printf("Unit:\t%s\n", unitString);
     printf("Name:\t%s\n", typedData->name);
     printf("-----------------------\n");
-    printf("\n");
+    printf("\r");
 }

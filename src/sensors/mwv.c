@@ -109,12 +109,12 @@ void MWV_Printer(void *data)
         break;
     }
 
-    printf("----------MWV----------\n");
+    printf("MWV--------------------\n");
     printf("Angle:\t%.2f\n", typedData->angle);
     printf("Ref.:\t%s\n", referenceString);
     printf("Speed:\t%.2f\n", typedData->speed);
     printf("Unit:\t%s\n", unitString);
     printf("Status:\t%s\n", statusString);
     printf("-----------------------\n");
-    printf("\n");
+    printf("\r");
 }
