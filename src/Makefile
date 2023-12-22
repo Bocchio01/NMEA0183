@@ -1,8 +1,10 @@
-.PHONY: compile run toSTM doxy clean
+.PHONY: compile run bench toSTM doxy clean
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -O2
 SRCS = *.c sensors/*.c
+BENCHDIR = benchmark
+BENCHTARGET = benchmark
 TARGET = main
 
 STM_Path = ..\STM_Windex
@@ -18,6 +20,11 @@ compile: $(SRCS)
 run: compile
 	@$(TARGET).exe
 	@echo Done runnig complete
+
+bench:
+	@$(CC) NMEA0183.c sensors.c sensors/*.c $(BENCHDIR)/*.c -o $(BENCHDIR)/$(BENCHTARGET)
+	@$(BENCHDIR)\$(BENCHTARGET).exe
+	@echo Benchmarking complete
 
 # We must NOT copy main.c and main.h to STM project
 toSTM: compile

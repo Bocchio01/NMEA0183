@@ -82,5 +82,4 @@ void XDR_Printer(void *data)
     printf("Unit:\t%s\n", unitString);
     printf("Name:\t%s\n", typedData->name);
     printf("-----------------------\n");
-    printf("\r");
 }

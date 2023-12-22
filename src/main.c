@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <time.h>
 
 #include "NMEA0183.h"
 #include "sensors/mwv.h"
@@ -10,13 +9,9 @@
 int main()
 {
 
-    clock_t tic = clock();
-
     int c;
-    char filenameDataset[] = "../Matlab/Telemetry/Logger/2023-12-15.txt";
 
-    FILE *file = fopen(filenameDataset, "r");
-
+    FILE *file = fopen("../Matlab/Testing/Datasets/2023-12-21.txt", "r");
     if (file == NULL)
     {
         perror("Error opening file");
@@ -33,15 +28,12 @@ int main()
 
         if (NMEA0183_IsDataReady(nmea0183))
         {
-            // NMEA0183_PrintData(nmea0183);
+            NMEA0183_PrintData(nmea0183);
             NMEA0183_Reset(nmea0183);
         }
     }
 
     fclose(file);
-
-    clock_t toc = clock();
-    printf("Elapsed: %f seconds\n", (double)(toc - tic) / CLOCKS_PER_SEC);
 
     return 0;
 }

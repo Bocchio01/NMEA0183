@@ -116,5 +116,4 @@ void MWV_Printer(void *data)
     printf("Unit:\t%s\n", unitString);
     printf("Status:\t%s\n", statusString);
     printf("-----------------------\n");
-    printf("\r");
 }
