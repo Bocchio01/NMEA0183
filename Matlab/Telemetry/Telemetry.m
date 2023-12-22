@@ -45,8 +45,8 @@ drawnow;
 
 currentPath = pwd;
 currentDate = string(datetime("now", "Format", 'yyyy-MM-dd'));
-loggerFileName = fullfile(currentPath, "\Telemetry\Logger\", currentDate +".txt");
-% senderFileName = fullfile(currentPath, "\Telemetry\Logger\", "2023-12-15" +".txt");
+loggerFileName = fullfile(currentPath, "\Telemetry\Logs\", currentDate +".txt");
+% senderFileName = fullfile(currentPath, "\Telemetry\Logs\", "2023-12-15" +".txt");
 
 % set(handlerRT, "CaptureFile", loggerFileName)
 set(handlerRT, "SendFile", senderFileName)

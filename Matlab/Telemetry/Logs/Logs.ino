@@ -1,5 +1,5 @@
 /**
- * Logger.ino
+ * Logs.ino
  *
  * @brief Logs data coming from RX pin to serial monitor
  *
