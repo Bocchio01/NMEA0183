@@ -1,66 +1,32 @@
 # NMEA0183 (for Windex)
 
-This repo contains the library to read data from a NMEA0183 ecosystem.
+This repo contains all the code related to a NMEA0183 ecosystem.
 
-It's written to be highly scalable and reusable for different NMEA0183 sensors.
+Each main folder contains a `README.md` file that explains briefly the content of the folder.
 
-So far, the following sensors are implemented and ready to be used:
+Just to give a quick overview:
 
-- CV7-E (Windex)
-
-## Library structure
-
-The library is structured as follows:
-
-```bash
-src
-├── sensors
-│   ├── SENSOR_*.c
-│   ├── SENSOR_*.h
-│   └── ...
-├── NMEA0183.c
-├── NMEA0183.h
-├── sensors.c
-└── sensors.h
-```
-
-In particular:
-
-- `NMEA0183.(c,h)`: Contains the implementation of the NMEA0183 protocol
-- `sensors.(c,h)`: Defines the interface of a generic NMEA0183 sensor
-- `sensors/`: Contains the implementation of each sensor that the library supports
-
-All the code makes a heavy use of pointer to structures and function.
-
-The main structure that contains all the information about the NMEA0183 ecosystem is the `NMEA0183_t` structure:
-
-```c
-typedef struct
-{
-	sentence_t *sentence; // All the information derived from the sentence and the sentence itself
-	comunication_t *comunication; // All the information about the comunication (stage ans status)
-	registered_sensor_t *registeredSensor; // All the information about the registered sensors (their reset, parser, printer functions and data)
-} NMEA0183_t;
-```
-
-To know more about the library structure, please refer to the generated [documentation](doxygen/index.html).
+- [src](src): contains the source code of the NMEA0183 library. Here is where you have to write the `C` code that will be directly [uploaded to the STM32](#how-to-use-with-stm32).
+- [Matlab](Matlab): contains the `MATLAB` code that is used to test/do telemetry of the NMEA0183 library running on the STM32.
 
 ## How to use with STM32
 
-To use the library with STM32, follow these steps:
+To use the library with STM32, follow these steps (*@TB* suggest that you create your STM32CubeMX project in the root directory of this repo and name it `STM_Windex`)
 
-1. Open your `.ioc` file with STM32CubeMX and from the connectivity tab click on `USART2` and configure it as follows:
+1. Open your `.ioc` file and from the connectivity tab click on `USART2` and configure it as follows:
 
-   1. Mode: Asynchronous
+<div align="center">
 
-   2. Parameter Settings:
-      1. Baud Rate: 4800 Bits/s
-      2. Word Length: 8 Bits
-      3. Parity: None
-      4. Stop Bits: 1 Bit
+| Menu               | Name                    | Value        |
+| ------------------ | ----------------------- | ------------ |
+| /                  | Mode                    | Asynchronous |
+| Parameter Settings | Baud Rate               | 4800 Bits/s  |
+| Parameter Settings | Word Length             | 8 Bits       |
+| Parameter Settings | Parity                  | None         |
+| Parameter Settings | Stop Bits               | 1 Bit        |
+| NVIC Settings      | USART2 global interrupt | Enabled      |
 
-   3. NVIC Settings:
-      1. USART2 global interrupt: Enabled
+</div>
 
 2. Generate the code
 
@@ -70,7 +36,7 @@ To use the library with STM32, follow these steps:
    2. Go to `C/C++ Build` -> `Settings` -> `Tool Settings` -> `MCU GCC Compiler` -> `Preprocessor`
    3. Click on `Add` and insert `STM32`
 
-4. Copy and paste the library files inside the `Core` folder of your STM32 project keeping the following structure:
+4. Copy and paste the library files from the `src` folder of this repo, inside the `Core` folder of your STM32 project keeping the following structure:
 
 ```bash
 Core
@@ -145,15 +111,15 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
 
 ```
 
-## How to test
-
-To test the library, you can either connect the CV7-E sensor or simulate it using an external program such as `PuTTY` or `MATLAB`.
-
-Notice that the test program written in `MATLAB` inside the `datalogs` folder is still not able to comunicate properly with the STM32.
-
 ## Windex connection
 
-To be clarified.
+To be clarified at the PST lab.
+
+<div align="center">
+
+![Hand drawn circuit](assets/img/Hand_drawn_circuit.jpg)
+
+</div>
 
 <!--
 | CV7-E  | Function         | STM32 |
@@ -167,8 +133,10 @@ To be clarified.
 -->
 
 
-## Usefull links
+## References
+
+Here follows a list of repositories that can be used as a reference for the development of the library:
 
 - [SammyB428/NMEA0183](https://github.com/SammyB428/NMEA0183): focused on modularity and simplicity of use, `C++`
 - [ttlappalainen/NMEA0183](https://github.com/ttlappalainen/NMEA0183): complete and well written library, `C++`
-- [jrcutler/NMEA0183](https://github.com/jrcutler/NMEA0183): quit and dirty approach, `C++`
+- [jrcutler/NMEA0183](https://github.com/jrcutler/NMEA0183): quick and dirty approach, `C++`

@@ -37,7 +37,7 @@ int main()
     struct tm tm = *localtime(&t);
 
     char filename[20];
-    sprintf(filename, "benchmark/%04d-%02d-%02d.txt", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
+    sprintf(filename, "utils/%04d-%02d-%02d.txt", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 
     FILE *outputFile = fopen(filename, "w");
     if (outputFile == NULL)

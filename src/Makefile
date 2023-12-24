@@ -3,7 +3,7 @@
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -O2
 SRCS = *.c sensors/*.c
-BENCHDIR = benchmark
+BENCHDIR = utils
 BENCHTARGET = benchmark
 TARGET = main
 
@@ -22,7 +22,7 @@ run: compile
 	@echo Done runnig complete
 
 bench:
-	@$(CC) NMEA0183.c sensors.c sensors/*.c $(BENCHDIR)/*.c -o $(BENCHDIR)/$(BENCHTARGET)
+	$(CC) NMEA0183.c sensors.c sensors/*.c $(BENCHDIR)/*.c -o $(BENCHDIR)/$(BENCHTARGET)
 	@$(BENCHDIR)\$(BENCHTARGET).exe
 	@echo Benchmarking complete
 
