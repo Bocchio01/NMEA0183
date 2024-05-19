@@ -1,4 +1,4 @@
-.PHONY: compile run bench toSTM doxy clean
+.PHONY: compile run bench toESP doxy clean
 
 CC = gcc
 FLAGS = -Wall -Wextra -Werror -pedantic -std=c99 -O2
@@ -7,9 +7,7 @@ BENCHDIR = utils
 BENCHTARGET = benchmark
 TARGET = main
 
-STM_Path = ..\STM_Windex
-STM_Path_Inc = $(STM_Path)\Core\Inc
-STM_Path_Src = $(STM_Path)\Core\Src
+ESP_Path = ..\ESP_Windex\Src
 
 all: run
 
@@ -26,17 +24,17 @@ bench:
 	@$(BENCHDIR)\$(BENCHTARGET).exe
 	@echo Benchmarking complete
 
-# We must NOT copy main.c and main.h to STM project
-toSTM: compile
-	@copy NMEA0183.h $(STM_Path_Inc)
-	@copy sensors.h $(STM_Path_Inc)
-	@copy sensors\*.h $(STM_Path_Inc)\sensors
+# We must NOT copy main.c and main.h to ESP project
+toESP: compile
+	@copy NMEA0183.h $(ESP_Path)
+	@copy sensors.h $(ESP_Path)
+	@copy sensors\*.h $(ESP_Path)\sensors
 
-	@copy NMEA0183.c $(STM_Path_Src)
-	@copy sensors.c $(STM_Path_Src)
-	@copy sensors\*.c $(STM_Path_Src)\sensors
+	@copy NMEA0183.c $(ESP_Path)
+	@copy sensors.c $(ESP_Path)
+	@copy sensors\*.c $(ESP_Path)\sensors
 
-	@echo Copy operation to STM project complete
+	@echo Copy operation to ESP project complete
 
 doxy: Doxyfile
 	@doxygen

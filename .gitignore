@@ -1,4 +1,5 @@
 **/.local_files
+src/CAN
 
 # Compiled source files
 *.exe
@@ -7,6 +8,9 @@
 # MATLAB related files
 *.asv
 *.m~
+
+# ESP32 related files
+ESP32_Windex/**/src
 
 # STM related files
 .metadata

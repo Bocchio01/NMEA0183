@@ -217,41 +217,41 @@ void NMEA0183_AddToBuffer(NMEA0183_t *nmea0183, uint8_t c);
  *
  * @param *nmea0183 pointer to NMEA0183_t struct
  *
- * @see NMEA0183_GetSensorID()
- * @see NMEA0183_GetFields()
- * @see NMEA0183_GetChecksum()
+ * @see NMEA0183_AnalyzeSensorID()
+ * @see NMEA0183_AnalyzeFields()
+ * @see NMEA0183_AnalyzeChecksum()
  * @see NMEA0183_ComputeChecksum()
  * @see NMEA0183_ParseData()
  */
 void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183);
 
 /**
- * @brief Get sensor ID
+ * @brief Analyze sensor ID
  *
- * Get sensor ID based on the first field of the sentence and store it
+ * Analyze sensor ID based on the first field of the sentence and store it
  * in the NMEA0183_t struct.
  *
  * @param *nmea0183 pointer to NMEA0183_t struct
  */
-void NMEA0183_GetSensorID(NMEA0183_t *nmea0183);
+void NMEA0183_AnalyzeSensorID(NMEA0183_t *nmea0183);
 
 /**
- * @brief Get fields
+ * @brief Analyze fields
  *
- * Get fields of the sentence and store them in the NMEA0183_t struct.
+ * Analyze fields of the sentence and store them in the NMEA0183_t struct.
  *
  * @param *nmea0183 pointer to NMEA0183_t struct
  */
-void NMEA0183_GetFields(NMEA0183_t *nmea0183);
+void NMEA0183_AnalyzeFields(NMEA0183_t *nmea0183);
 
 /**
- * @brief Get checksum
+ * @brief Analyze checksum
  *
- * Get checksum of the sentence and store it in the NMEA0183_t struct.
+ * Analyze checksum of the sentence and store it in the NMEA0183_t struct.
  *
  * @param *nmea0183 pointer to NMEA0183_t struct
  */
-void NMEA0183_GetChecksum(NMEA0183_t *nmea0183);
+void NMEA0183_AnalyzeChecksum(NMEA0183_t *nmea0183);
 
 /**
  * @brief Compute checksum
@@ -266,6 +266,17 @@ void NMEA0183_GetChecksum(NMEA0183_t *nmea0183);
 uint8_t NMEA0183_ComputeChecksum(char *buffer, uint8_t length);
 
 /**
+ * @brief Get sensor ID
+ *
+ * Get sensor ID stored in the NMEA0183_t struct.
+ *
+ * @param *nmea0183 pointer to NMEA0183_t struct
+ *
+ * @return sensor_ID_t sensor ID
+ */
+sensor_ID_t NMEA0183_GetSensorID(NMEA0183_t *nmea0183);
+
+/**
  * @brief Parse data
  *
  * Parse data of the NMEA0183_t struct and store them in the
@@ -277,6 +288,18 @@ uint8_t NMEA0183_ComputeChecksum(char *buffer, uint8_t length);
  * @param *nmea0183 pointer to NMEA0183_t struct
  */
 void NMEA0183_ParseData(NMEA0183_t *nmea0183);
+
+/**
+ * @brief Get data address
+ *
+ * Get the address of the data stored in the registered_sensor_t struct
+ * corresponding to the correct sensor that has sent the sentence.
+ *
+ * @param *nmea0183 pointer to NMEA0183_t struct
+ *
+ * @return void* address of the data
+ */
+void *NMEA0183_GetDataAddress(NMEA0183_t *nmea0183);
 
 /**
  * @brief Print data

@@ -221,15 +221,15 @@ void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183)
         return;
     }
 
-    NMEA0183_GetSensorID(nmea0183);
+    NMEA0183_AnalyzeSensorID(nmea0183);
     if (nmea0183->sentence->sensorID == UNKNOWN)
     {
         nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
         return;
     }
 
-    NMEA0183_GetFields(nmea0183);
-    NMEA0183_GetChecksum(nmea0183);
+    NMEA0183_AnalyzeFields(nmea0183);
+    NMEA0183_AnalyzeChecksum(nmea0183);
 
     nmea0183->sentence->checksum->isValid = (nmea0183->sentence->checksum->value == NMEA0183_ComputeChecksum(nmea0183->sentence->buffer->data, nmea0183->sentence->buffer->sizeOf));
     if (nmea0183->sentence->checksum->isValid == false)
@@ -241,7 +241,7 @@ void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183)
     NMEA0183_ParseData(nmea0183);
 }
 
-void NMEA0183_GetSensorID(NMEA0183_t *nmea0183)
+void NMEA0183_AnalyzeSensorID(NMEA0183_t *nmea0183)
 {
     char sensorID[FIELD_MAX_LENGTH] = {0};
 
@@ -264,7 +264,7 @@ void NMEA0183_GetSensorID(NMEA0183_t *nmea0183)
     nmea0183->sentence->sensorID = UNKNOWN;
 }
 
-void NMEA0183_GetFields(NMEA0183_t *nmea0183)
+void NMEA0183_AnalyzeFields(NMEA0183_t *nmea0183)
 {
     nmea0183->sentence->fields->sizeOf = 0;
     uint8_t i = 0;
@@ -301,7 +301,7 @@ void NMEA0183_GetFields(NMEA0183_t *nmea0183)
     }
 }
 
-void NMEA0183_GetChecksum(NMEA0183_t *nmea0183)
+void NMEA0183_AnalyzeChecksum(NMEA0183_t *nmea0183)
 {
     nmea0183->sentence->checksum->value = (uint8_t)strtol(&nmea0183->sentence->buffer->data[nmea0183->sentence->buffer->sizeOf - 3], NULL, 16);
 }
@@ -320,9 +320,14 @@ uint8_t NMEA0183_ComputeChecksum(char *buffer, uint8_t length)
     return checksum_value;
 }
 
+sensor_ID_t NMEA0183_GetSensorID(NMEA0183_t *nmea0183)
+{
+    return nmea0183->sentence->sensorID;
+}
+
 void NMEA0183_ParseData(NMEA0183_t *nmea0183)
 {
-    sensor_ID_t sensorType = nmea0183->sentence->sensorID;
+    sensor_ID_t sensorType = NMEA0183_GetSensorID(nmea0183);
 
     for (uint8_t i = 0; i < nmea0183->registeredSensor->sizeOf; i++)
     {
@@ -343,10 +348,29 @@ void NMEA0183_ParseData(NMEA0183_t *nmea0183)
     nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
 }
 
+void *NMEA0183_GetDataAddress(NMEA0183_t *nmea0183)
+{
+    sensor_ID_t sensorType = NMEA0183_GetSensorID(nmea0183);
+
+    for (uint8_t i = 0; i < nmea0183->registeredSensor->sizeOf; i++)
+    {
+        sensor_t *sensor = nmea0183->registeredSensor->sensor[i];
+
+        if (sensor->sensorID == sensorType && sensor->data != NULL)
+        {
+            return sensor->data;
+        }
+    }
+
+    nmea0183->comunication->status = COMUNICATION_STATUS_ERROR;
+
+    return NULL;
+}
+
 void NMEA0183_PrintData(NMEA0183_t *nmea0183)
 {
 
-    sensor_ID_t sensorType = nmea0183->sentence->sensorID;
+    sensor_ID_t sensorType = NMEA0183_GetSensorID(nmea0183);
 
     for (uint8_t i = 0; i < nmea0183->registeredSensor->sizeOf; i++)
     {
