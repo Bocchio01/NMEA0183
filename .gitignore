@@ -10,7 +10,8 @@ src/CAN
 *.m~
 
 # ESP32 related files
-ESP32_Windex/**/src
+ESP32_Windex/CAN_test
+ESP32_Windex/**/src/
 
 # STM related files
 .metadata

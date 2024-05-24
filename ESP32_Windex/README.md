@@ -28,7 +28,26 @@ extern "C" {
 }
 ```
 
-Notice that the `extern "C"` is needed to avoid name mangling when including C code in a C++ project.
+Notice that the `extern "C" {}` is needed to avoid name mangling when including C code in a C++ project.
+
+## Load the CAN library into the sketch
+
+To use the `CAN` library, you need to include it in your sketch.
+The library currently used comes from this [repository](https://github.com/sandeepmistry/arduino-CAN/tree/master).
+
+To include the library in your sketch, you can either download the repository and include the library under the `src/arduino-CAN` folder in your project or you can use the `git submodule` command to include the library as a submodule in your project.
+For the second option, you can run the following command in the root of your project:
+
+```bash
+git submodule init
+git submodule update
+```
+
+Then, you can include the library in your sketch by adding the following line at the beginning of your sketch:
+
+```cpp
+#include "src/arduino-CAN/src/CAN.h"
+```
 
 ### MAC Addresses
 
