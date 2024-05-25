@@ -244,6 +244,7 @@ void NMEA0183_AnalyzeData(NMEA0183_t *nmea0183)
 void NMEA0183_AnalyzeSensorID(NMEA0183_t *nmea0183)
 {
     char sensorID[FIELD_MAX_LENGTH] = {0};
+    uint8_t numberOfSensors = sizeof(sensorAssociation) / sizeof(sensorAssociation[0]);
 
     uint8_t i = 1; // Skip over the $ at the begining of the sentence
     while (nmea0183->sentence->buffer->data[i] != SENTENCE_CHARACTER_DELIMITER && i < nmea0183->sentence->buffer->sizeOf)
@@ -252,7 +253,7 @@ void NMEA0183_AnalyzeSensorID(NMEA0183_t *nmea0183)
         i++;
     }
 
-    for (i = 0; sensorAssociation[i].sensorTypeString != NULL; i++)
+    for (i = 0; i < numberOfSensors; i++)
     {
         if (strcmp(sensorID, sensorAssociation[i].sensorTypeString) == 0)
         {

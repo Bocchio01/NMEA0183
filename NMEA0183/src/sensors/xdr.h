@@ -29,7 +29,7 @@ typedef struct
     XDR_type_t type;
     float temperature;
     XDR_units_t unit;
-    char name[];
+    char name[10];
 } XDR_data_t;
 
 /**

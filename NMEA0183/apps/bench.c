@@ -36,7 +36,7 @@ int main()
     time_t t = time(NULL);
     struct tm tm = *localtime(&t);
 
-    char filename[21];
+    char filename[100];
     snprintf(filename, sizeof(filename), "apps/bench_results/%04d-%02d-%02d.txt", tm.tm_year + 1900, tm.tm_mon + 1, tm.tm_mday);
 
     FILE *outputFile = fopen(filename, "w");
@@ -90,7 +90,6 @@ float *runBenchmarks(test_t testCase, char datasetNames[][50], NMEA0183_t *nmea0
         for (uint8_t j = 0; j < NUMBER_OF_BENCHMARKS_PER_DATASET; j++)
         {
             int c;
-            int counter = 0;
             clock_t tic = clock();
 
             fseek(file, 0, SEEK_SET);
@@ -105,7 +104,6 @@ float *runBenchmarks(test_t testCase, char datasetNames[][50], NMEA0183_t *nmea0
                     {
                         NMEA0183_PrintData(nmea0183);
                         NMEA0183_Reset(nmea0183);
-                        counter++;
                     }
                     break;
 
@@ -113,7 +111,6 @@ float *runBenchmarks(test_t testCase, char datasetNames[][50], NMEA0183_t *nmea0
                     if (NMEA0183_IsDataReady(nmea0183))
                     {
                         NMEA0183_Reset(nmea0183);
-                        counter++;
                     }
                     break;
 
