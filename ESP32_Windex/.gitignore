@@ -1,0 +1,3 @@
+# ESP32 related files
+**/src/NMEA0183/*
+**/src/arduino-CAN/*

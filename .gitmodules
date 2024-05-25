@@ -1,3 +1,6 @@
-[submodule "ESP32_Windex/Receiver/src/arduino-CAN"]
-	path = ESP32_Windex/Receiver/src/arduino-CAN
+[submodule "NMEA0183/docs/doxygen-awesome-css"]
+	path = NMEA0183/docs/doxygen-awesome-css
+	url = https://github.com/jothepro/doxygen-awesome-css.git
+[submodule "ESP32_Windex/BaseNode/src/arduino-CAN"]
+	path = ESP32_Windex/BaseNode/src/arduino-CAN
 	url = https://github.com/sandeepmistry/arduino-CAN.git

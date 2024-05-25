@@ -1,0 +1,11 @@
+{
+    "cmake.debugConfig": {
+        "cwd": "${workspaceFolder}",
+        "args": [],
+        "console": "integratedTerminal",
+    },
+    "files.associations": {
+        "Doxyfile": "shellscript",
+        "xdr.h": "c"
+    }
+}

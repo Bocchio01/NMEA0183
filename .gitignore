@@ -1,18 +1,1 @@
 **/.local_files
-src/CAN
-
-# Compiled source files
-*.exe
-*.out
-
-# MATLAB related files
-*.asv
-*.m~
-
-# ESP32 related files
-ESP32_Windex/CAN_test
-ESP32_Windex/**/src/
-
-# STM related files
-.metadata
-STM_Windex
