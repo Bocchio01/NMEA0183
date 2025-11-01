@@ -23,3 +23,4 @@ Here follows a list of repositories that can be used as a reference for the deve
 - [SammyB428/NMEA0183](https://github.com/SammyB428/NMEA0183): focused on modularity and simplicity of use, `C++`
 - [ttlappalainen/NMEA0183](https://github.com/ttlappalainen/NMEA0183): complete and well written library, `C++`
 - [jrcutler/NMEA0183](https://github.com/jrcutler/NMEA0183): quick and dirty approach, `C++`
+- [CSS electronics/NMEA2000](https://www.csselectronics.com/pages/nmea-2000-n2k-intro-tutorial): high level explanation of the NMEA2000 protocol

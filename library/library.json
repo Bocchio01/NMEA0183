@@ -1,0 +1,56 @@
+{
+    "name": "NMEA0183",
+    "version": "1.0.0",
+    "description": "NMEA0183 protocol parser for embedded systems with static memory allocation",
+    "keywords": [
+        "nmea",
+        "nmea0183",
+        "marine",
+        "gps",
+        "parser",
+        "embedded",
+        "wind",
+        "sensor"
+    ],
+    "authors": [
+        {
+            "name": "Windex Team",
+            "url": "https://github.com/Bocchio01"
+        }
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Bocchio01/nmea0183.git"
+    },
+    "license": "MIT",
+    "frameworks": [
+        "arduino",
+        "espidf"
+    ],
+    "platforms": [
+        "espressif32",
+        "espressif8266"
+    ],
+    "build": {
+        "flags": [
+            "-Wall",
+            "-Wextra",
+            "-O2",
+            "-DNMEA0183_NO_MALLOC=1"
+        ],
+        "includeDir": "include"
+    },
+    "export": {
+        "include": [
+            "include/*",
+            "src/*",
+            "library.json",
+            "README.md",
+            "LICENSE"
+        ],
+        "exclude": [
+            "*.git*",
+            "CMakeLists.txt"
+        ]
+    }
+}
